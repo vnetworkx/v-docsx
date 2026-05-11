@@ -96,6 +96,8 @@ Any mismatch MUST be treated as invalid.
 
 Records SHOULD include all data necessary for verification without leaking private keys or unnecessary sensitive data.
 
+For backend storage, immutability enforcement, and on-disk record materialization details, implementation-specific behavior SHOULD be documented in `v-nodex` rather than being expanded here.
+
 ## 12. Privacy
 
 Private key material MUST NOT appear in a record.
@@ -113,3 +115,8 @@ For migrations and cross-space actions, records MUST preserve:
 ## 14. Educational note
 
 The record stream is the protocol's memory. If the records are correct, the state can be reconstructed; if the records are incomplete, the system loses verifiability.
+
+When readers need to understand how records are stored, persisted, or replayed at the implementation layer, they should follow the linked `v-nodex` documentation:
+- [storage.md](https://github.com/vector-network/v-nodex/blob/main/docs/storage.md)
+- [spatial-storage.md](https://github.com/vector-network/v-nodex/blob/main/docs/spatial-storage.md)
+- [immutability.md](https://github.com/vector-network/v-nodex/blob/main/docs/immutability.md)

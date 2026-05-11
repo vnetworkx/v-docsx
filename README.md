@@ -16,6 +16,7 @@ This documentation set is intended to:
 - describe security expectations for wallets, keys, signatures, and ownership
 - provide formal notation for implementers and auditors
 - document the language, SDK, and visualization layers built on top of the kernel
+- provide direct cross-references to implementation-level documentation in `v-nodex` where storage, persistence, immutability, and runtime mechanics are explained
 
 ## Document map
 
@@ -38,7 +39,19 @@ This documentation set is intended to:
 - `SDK_SPEC.md` — SDK architecture, interface expectations, and integration rules
 - `SDK_FUNCTION_CONTRACTS.md` — callable SDK behavior and function-level contracts
 - `VISUALIZATION_FRAMEWORK.md` — ledger views, state visualizations, and explorer concepts
-- `experiments.py` — small reference math utilities for testing and experimentation
+- `v-nodex/docs/storage.md` — storage model, persistence rules, and record materialization
+- `v-nodex/docs/spatial-storage.md` — spatial storage layout and vector-space persistence
+- `v-nodex/docs/immutability.md` — immutability guarantees and append-only storage behavior
+
+## Related implementation references
+
+When a section in this documentation set mentions storage, persistence, retention, immutability, or on-disk layout, readers should jump to the corresponding `v-nodex` implementation documentation.
+
+Suggested target references:
+
+- [v-nodex storage documentation](https://github.com/vector-network/v-nodex/blob/main/docs/storage.md)
+- [v-nodex spatial storage documentation](https://github.com/vector-network/v-nodex/blob/main/docs/spatial-storage.md)
+- [v-nodex immutability documentation](https://github.com/vector-network/v-nodex/blob/main/docs/immutability.md)
 
 ## Recommended reading order
 
@@ -52,6 +65,7 @@ This documentation set is intended to:
 8. Read `FORMALISM.md` for strict notation and invariants.
 9. Read `EXAMPLES.md` and `experiments.py` for learning, testing, and experimentation.
 10. Read `VECTOR_LANGUAGE_SPEC.md`, `VECTOR_LANGUAGE_REFERENCE.md`, `SDK_SPEC.md`, `SDK_FUNCTION_CONTRACTS.md`, and `VISUALIZATION_FRAMEWORK.md` for the higher layers built on top of the kernel.
+11. Read the relevant `v-nodex` storage documentation when the topic involves persistence, record storage, storage layout, immutability, or runtime state materialization.
 
 ## Normative language
 
@@ -69,6 +83,7 @@ Some documents in this directory overlap by design. That is intentional.
 - Other files may restate parts of the spec in a more focused or more readable form.
 - The language, SDK, visualization, and example documents are supporting layers rather than competing sources of truth.
 - Reference code such as `experiments.py` is educational and experimental unless explicitly promoted into the canonical implementation.
+- Implementation-specific storage behavior belongs in `v-nodex`, while this directory focuses on protocol rules and readable canonical documentation.
 
 ## Suggested use by audience
 
@@ -77,6 +92,7 @@ Some documents in this directory overlap by design. That is intentional.
 - Protocol designers: study `STATE_MODEL.md`, `CANONICAL_STATE_MODEL.md`, `CERTIFICATION.md`, `AUTHRATIO.md`, and `FORMALISM.md`.
 - Tool builders: review `VECTOR_LANGUAGE_SPEC.md`, `VECTOR_LANGUAGE_REFERENCE.md`, and `VISUALIZATION_FRAMEWORK.md`.
 - Maintainers: consult `GOVERNANCE.md` and `ERRORS.md` when changing protocol behavior.
+- Implementers working on persistence or state backends: follow the linked `v-nodex` storage, spatial-storage, and immutability documentation alongside these protocol rules.
 
 ## Notes for contributors
 
@@ -88,4 +104,4 @@ When editing the documentation set:
 - keep the kernel deterministic in every description of execution
 - treat record generation as mandatory for successful state transitions
 - keep wallet secrets out of shared state and public records
-
+- add or update cross-references to `v-nodex` whenever storage, persistence, or immutability concepts are introduced

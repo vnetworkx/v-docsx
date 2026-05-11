@@ -2,7 +2,7 @@
 ## Master Rulebook
 
 **Document status:** Canonical draft specification  
-**Scope:** Vector state, wallet ownership, certification, projection, reconstruction, drain, origin, records, language, SDKs, and visualization  
+**Scope:** Vector state, wallet ownership, certification, projection, reconstruction, drain, origin, records, language, SDKs, visualization, and implementation cross-references  
 **Audience:** Researchers, developers, auditors, protocol designers, and implementers
 
 ---
@@ -12,6 +12,8 @@
 Vector Network is a decentralized state system in which each wallet holds a multidimensional vector of token values. The protocol defines how vectors are created, stored, transferred, projected, drained, reconstructed, certified, and recorded.
 
 This specification is the normative source of truth for the protocol. Any implementation claiming compatibility with Vector Network MUST conform to this document and the versioned sub-specifications referenced herein.
+
+For implementation-level storage, persistence, and immutability details, readers SHOULD follow the corresponding `v-nodex` documentation linked from the documentation set.
 
 ---
 
@@ -47,6 +49,9 @@ The master specification is supported by the following canonical modules:
 - `RECORDS.md` — record rules
 - `SECURITY.md` — security rules
 - `STATE_MODEL.md` / `CANONICAL_STATE_MODEL.md` — canonical state structures
+- `v-nodex/docs/storage.md` — implementation-level storage, persistence, and record materialization
+- `v-nodex/docs/spatial-storage.md` — spatial storage layout and vector-space persistence
+- `v-nodex/docs/immutability.md` — append-only immutability model and record-retention behavior
 
 If a sub-document conflicts with this master specification, the master specification governs until a versioned override is defined.
 
@@ -166,6 +171,8 @@ A compliant implementation MUST represent at minimum the following logical field
 - `space_id`
 - `version`
 
+Where storage layout, persistence behavior, or append-only implementation details matter, the corresponding `v-nodex` documentation SHOULD be treated as the implementation reference.
+
 ---
 
 ## 8. Canonical operation set
@@ -247,6 +254,7 @@ A compliant implementation MUST NOT:
 11. silently coerce incompatible vector types
 12. permit record rewriting without versioned append-only governance
 13. introduce new canonical core transitions without a versioned spec
+14. separate storage, persistence, or immutability behavior from the implementation-level `v-nodex` documentation when those topics are being defined
 
 ---
 
@@ -268,6 +276,8 @@ They MUST NOT:
 - bypass certification or ownership checks
 - fabricate values or records
 - redefine the canonical transition set
+
+When these layers need to explain storage, persistence, immutability, or backend layout, they SHOULD link to the corresponding `v-nodex` documentation rather than redefining backend rules inside the interface layer.
 
 ---
 
