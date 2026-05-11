@@ -1,49 +1,134 @@
 # Operations
 
-This document defines the protocol semantics for the core operations.
+This document defines the protocol semantics for the canonical core operations.
 
-## 1. Common preflight checks
+## 1. Scope
+
+The canonical core operation set is finite:
+
+- CREATE
+- CERTIFY
+- TRANSFER
+- DRAIN
+- PROJECT
+- RECONSTRUCT
+- QUERY
+- RECORD
+
+If an implementation supports extension operations such as split, merge, freeze, unfreeze, or migration, those operations MUST be defined in a separate versioned extension specification and MUST NOT be treated as part of the canonical v1 core.
+
+## 2. Common preflight checks
 
 Before any operation, an implementation MUST:
 
-1. authenticate the caller,
-2. verify authorization,
-3. ensure the vector exists,
-4. ensure the wallet exists,
-5. verify type compatibility,
-6. check certification if required,
-7. validate parameters,
-8. confirm the operation is permitted in the current space.
+1. authenticate the caller
+2. verify authorization
+3. ensure the vector exists or is eligible for creation
+4. ensure the wallet exists when a wallet-bound action is requested
+5. verify type compatibility
+6. check certification if required
+7. validate parameters
+8. confirm the operation is permitted in the current space
+9. ensure zero-vector safety where relevant
+10. ensure a record will be produced for state-changing actions
 
 Failure at any stage MUST abort the operation.
 
-## 2. Transfer
+## 3. CREATE
 
-### 2.1 Purpose
+### 3.1 Purpose
+Create a new origin-valid vector.
+
+### 3.2 Requirements
+A CREATE operation MUST:
+
+- specify the intended type
+- specify initial components or generation parameters
+- use the origin engine or equivalent approved origin path
+- satisfy any proof-of-effort or procedural proof requirement
+- produce an origin record
+
+### 3.3 Postconditions
+After CREATE:
+
+- the vector exists
+- the vector has a valid origin reference
+- the initial certification state is recorded
+- hidden mutation is prohibited
+
+## 4. CERTIFY
+
+### 4.1 Purpose
+Verify whether a vector may participate in restricted actions.
+
+### 4.2 Requirements
+A CERTIFY operation MUST:
+
+- identify the target vector
+- evaluate AuthRatio in the current context
+- compare the score against the applicable threshold
+- write the resulting certification state to the record stream
+
+### 4.3 Postconditions
+The result MUST be one of:
+
+- certified
+- uncertified
+- suspended
+- revoked
+- pending
+
+## 5. TRANSFER
+
+### 5.1 Purpose
 Transfer moves vector value from one owner-bound context to another.
 
-### 2.2 Requirements
-A transfer MUST:
+### 5.2 Requirements
+A TRANSFER operation MUST:
+
 - specify source and destination
 - specify amount or component subset
 - respect type compatibility
 - apply drain if required
 - preserve record traceability
+- reject if the source is not authorized or not certified when required
 
-### 2.3 Postconditions
+### 5.3 Postconditions
 After a valid transfer:
+
 - source balance decreases
 - destination balance increases
-- total preserved value matches the transfer law
+- total transferred value follows the declared drain rule
 - a record exists
 
-## 3. Projection
+## 6. DRAIN
 
-### 3.1 Purpose
-Projection locks part of a vector into a controlled process.
+### 6.1 Purpose
+Drain is an explicit protocol cost.
 
-### 3.2 Required fields
-A projection MUST specify:
+### 6.2 Requirements
+A DRAIN operation MUST:
+
+- declare the drain rule
+- declare the amount or formula
+- declare whether offset credit is used
+- define the destination of any collected value or the absence of one
+
+### 6.3 Postconditions
+After a valid drain:
+
+- the drained portion is removed or redirected according to policy
+- the effective drain is deterministic
+- a record exists
+
+## 7. PROJECT
+
+### 7.1 Purpose
+Project locks part of a vector into a controlled process.
+
+### 7.2 Required fields
+A PROJECT operation MUST specify:
+
 - projection identifier
 - locked components or amount
 - rule environment
@@ -52,138 +137,76 @@ A projection MUST specify:
 - drain rule if applicable
 - certification requirement
 
-### 3.3 Semantics
+### 7.3 Semantics
 During projection:
+
 - locked value is not freely transferable unless explicitly allowed
 - the projection must remain traceable
 - settlement MUST be single-source-of-truth
 
-### 3.4 Settlement outcomes
+### 7.4 Settlement outcomes
 A settlement MAY result in:
-- no change,
-- gain,
-- loss,
-- partial release,
-- staged release.
+
+- no change
+- gain
+- loss
+- partial release
+- staged release
 
 Every outcome MUST be encoded in the record stream.
 
-## 4. Reconstruction
+## 8. RECONSTRUCT
 
-### 4.1 Purpose
+### 8.1 Purpose
 Reconstruction returns projected value after settlement.
 
-### 4.2 Requirements
-A reconstruction MUST:
+### 8.2 Requirements
+A RECONSTRUCT operation MUST:
+
 - reference a valid prior projection
 - consume the projection exactly as defined
 - apply the settlement rule exactly once unless the projection type explicitly allows multiple settlement phases
 - prevent double reconstruction
+- preserve traceability to the original projection record
 
-### 4.3 Postconditions
+### 8.3 Postconditions
 The wallet MUST recover:
-- the permitted returned principal,
-- the settlement outcome,
-- the final state required by the projection contract.
 
-## 5. Drain
+- the permitted returned principal
+- the settlement outcome
+- the final state required by the projection contract
 
-### 5.1 Purpose
-Drain is an explicit protocol cost.
+## 9. QUERY
 
-### 5.2 Drain forms
-Drain MAY be:
-- percentage-based,
-- fixed-unit,
-- tiered,
-- type-based,
-- space-based,
-- operation-based,
-- certification-offsettable.
+### 9.1 Purpose
+Query reads wallet state, records, certification, projection status, origin status, or network state.
 
-### 5.3 Offset rules
-A drain MAY be reduced by AuthRatio tokens or equivalent protocol credit only if the rule set explicitly provides that behavior.
+### 9.2 Rules
+Query does not change ledger state.
 
-The offset MUST be:
-- bounded,
-- deterministic,
-- recorded,
-- reversible only if the protocol explicitly allows reversal.
+Query MAY return:
 
-## 6. Certification check
+- vector state
+- wallet state
+- record history
+- certification status
+- projection status
+- origin status
+- network metadata
 
-### 6.1 Purpose
-Certification determines eligibility.
+## 10. RECORD
 
-### 6.2 Outcomes
-Possible outputs are:
-- certified
-- uncertified
-- suspended
-- revoked
-- pending
+### 10.1 Purpose
+Persist an immutable state transition entry.
 
-### 6.3 Effects
-Restricted operations MUST reject non-certified states unless the specific operation is exempt.
+### 10.2 Requirement
+Every successful state-changing operation MUST produce a record.
 
-## 7. Origin validation and creation
+Read-only inspection of existing records does not itself need to create a new record unless the protocol explicitly logs reads.
 
-### 7.1 Purpose
-Origin rules prevent unrestricted creation.
+## 11. Validation order
 
-### 7.2 Requirements
-A new vector MUST only be created if:
-- the origin engine approves the creation path,
-- the work or procedural proof is valid,
-- the resulting vector is type-valid,
-- the event is recorded,
-- the certification rule is satisfied if required.
-
-### 7.3 Anti-abuse rule
-A protocol implementation MUST NOT accept a direct mint or creation bypass that skips origin validation.
-
-## 8. Split
-
-Split divides one vector into two or more vectors.
-
-Rules:
-- the split mapping MUST be explicit
-- source components MUST map deterministically
-- combined post-split value MUST match the source minus any declared drain
-
-## 9. Merge
-
-Merge combines vectors.
-
-Rules:
-- all inputs MUST be mutually compatible
-- merge identity MUST be explicit
-- component alignment MUST be deterministic
-- any loss or drain MUST be declared
-
-## 10. Freeze and unfreeze
-
-Freeze locks a vector or wallet state from mutation.
-
-Unfreeze restores permitted activity.
-
-Rules:
-- freeze MUST be reversible only through authorized action
-- frozen state MUST be recorded
-- freeze MUST NOT destroy underlying historical data
-
-## 11. Migration
-
-Migration changes the active vector space.
-
-Rules:
-- source and target spaces MUST be mutually compatible or explicitly bridged
-- migration MUST preserve traceability
-- incompatible fields MUST be normalized or rejected according to the target rules
-
-## 12. Operational precedence
-
-When multiple rules apply, precedence order is:
+The recommended order for state-changing operations is:
 
 1. security and authentication
 2. ownership authority
@@ -191,8 +214,32 @@ When multiple rules apply, precedence order is:
 4. type constraints
 5. drain rules
 6. settlement rules
-7. record creation
+7. state mutation
+8. record creation
+
+## 12. Determinism
+
+All core operations MUST be deterministic:
+
+- same state
+- same inputs
+- same policy version
+
+=> same output and same record content, modulo timestamp or proof fields that are themselves derived deterministically or canonically signed.
 
 ## 13. Reference implementation note
 
 An implementation SHOULD use atomic state transition logic so that partial application cannot occur.
+
+## 14. Core operation summary
+
+| Operation | State change | Record required |
+|---|---|---|
+| CREATE | yes | yes |
+| CERTIFY | yes | yes |
+| TRANSFER | yes | yes |
+| DRAIN | yes | yes |
+| PROJECT | yes | yes |
+| RECONSTRUCT | yes | yes |
+| QUERY | no | no |
+| RECORD | write path yes / read path no | yes on write |
