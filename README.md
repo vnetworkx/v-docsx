@@ -1,4 +1,4 @@
-# Vector Network Documentation Set (v-docsx)
+
 
 This directory contains the master documentation set for Vector Network, including the canonical protocol specification, state model, operational rules, certification rules, security rules, language references, SDK contracts, and supporting examples.
 
