@@ -1,23 +1,67 @@
 {
-  "AUTHRATIO.md": 805,
-  "CANONICAL_STATE_MODEL.md": 464,
-  "CERTIFICATION.md": 644,
-  "ERRORS.md": 73,
-  "EXAMPLES.md": 558,
-  "FORMALISM.md": 604,
-  "GLOSSARY.md": 89,
-  "GOVERNANCE.md": 77,
-  "OPERATIONS.md": 939,
-  "OPERATIONS_FINITE_TRANSITIONS.md": 636,
-  "README.md": 35,
-  "RECORDS.md": 115,
-  "SDK_FUNCTION_CONTRACTS.md": 385,
-  "SDK_SPEC.md": 436,
-  "SECURITY.md": 95,
-  "SPEC.md": 1177,
-  "STATE_MODEL.md": 464,
-  "VECTOR_LANGUAGE_REFERENCE.md": 267,
-  "VECTOR_LANGUAGE_SPEC.md": 638,
-  "VISUALIZATION_FRAMEWORK.md": 461,
-  "experiments.py": 112
+  "name": "project-manifest",
+  "version": "0.1.0",
+  "root": {
+    "files": [
+      "README.md",
+      "SECURITY.md",
+      "experiments.py",
+      "MANIFEST.json"
+    ],
+    "directories": {
+      "docs": {
+        "directories": {
+          "overview": {
+            "files": [
+              "QUICK_START.md",
+              "CONCEPT_MAP.md",
+              "STATUS.md",
+              "LINKS.md"
+            ]
+          },
+          "core": {
+            "files": [
+              "SPEC.md",
+              "FORMALISM.md",
+              "STATE_MODEL.md",
+              "CANONICAL_STATE_MODEL.md"
+            ]
+          },
+          "language": {
+            "files": [
+              "VECTOR_LANGUAGE_SPEC.md"
+            ]
+          },
+          "sdk": {
+            "files": [
+              "SDK_SPEC.md",
+              "SDK_FUNCTION_CONTRACTS.md"
+            ]
+          },
+          "operations": {
+            "files": [
+              "OPERATIONS.md",
+              "OPERATIONS_FINITE_TRANSITIONS.md",
+              "ERRORS.md"
+            ]
+          },
+          "reference": {
+            "files": [
+              "EXAMPLES.md",
+              "GLOSSARY.md",
+              "RECORDS.md",
+              "VISUALIZATION_FRAMEWORK.md"
+            ]
+          },
+          "governance": {
+            "files": [
+              "GOVERNANCE.md",
+              "CERTIFICATION.md",
+              "AUTHRATIO.md"
+            ]
+          }
+        }
+      }
+    }
+  }
 }
