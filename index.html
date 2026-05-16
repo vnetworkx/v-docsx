@@ -21,6 +21,7 @@
       --code-btn-bg: rgba(255,255,255,0.10);
       --code-btn-bg-hover: rgba(255,255,255,0.18);
       --code-btn-border: rgba(255,255,255,0.20);
+      --muted: rgba(255,255,255,0.72);
     }
 
     body {
@@ -71,8 +72,8 @@
       gap: 8px;
       border: 1px solid var(--border);
       border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 14px;
+      padding: 6px 12px;
+      font-size: 13px;
       color: #ffffff;
       background: transparent;
       white-space: normal;
@@ -82,9 +83,22 @@
       word-break: break-word;
     }
 
-    .release strong {
-      color: #ffffff;
+    .release-label {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--muted);
       font-weight: 700;
+    }
+
+    .release-name {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .release-tag {
+      color: var(--muted);
+      font-weight: 600;
     }
 
     main {
@@ -231,7 +245,7 @@
   <header>
     <div class="wrap title-row">
       <h1 id="pageTitle">Loading…</h1>
-      <div class="release" id="releaseBadge">Latest release: <strong>…</strong></div>
+      <div class="release" id="releaseBadge">LATEST RELEASE <strong>…</strong></div>
     </div>
   </header>
 
@@ -298,7 +312,9 @@
     }
 
     function escapeAttr(value) {
-      return String(value ?? "").replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;");
     }
 
     function escapeHtml(value) {
@@ -334,12 +350,7 @@
             return queryPart ? route + "?" + queryPart : route;
           }
 
-          const directPath =
-            cleanPath +
-            (queryPart ? "?" + queryPart : "") +
-            (hashPart ? "#" + hashPart : "");
-
-          return directPath;
+          return cleanPath + (queryPart ? "?" + queryPart : "") + (hashPart ? "#" + hashPart : "");
         }
       }
 
@@ -356,7 +367,6 @@
       const [cleanHrefPath, queryPart] = hrefPath.split("?");
 
       const resolved = resolveRelativePath(baseFile, cleanHrefPath || "");
-
       if (!resolved) return trimmed;
 
       if (isMarkdownPath(resolved)) {
@@ -364,11 +374,7 @@
         return queryPart ? route + "?" + queryPart : route;
       }
 
-      return (
-        resolved +
-        (queryPart ? "?" + queryPart : "") +
-        (hrefHash ? "#" + hrefHash : "")
-      );
+      return resolved + (queryPart ? "?" + queryPart : "") + (hrefHash ? "#" + hrefHash : "");
     }
 
     async function loadMarkdown(file) {
@@ -477,14 +483,23 @@
 
         if (!res.ok) throw new Error(`Release fetch failed: ${res.status}`);
         const data = await res.json();
-        const tag = data.tag_name || "unknown";
+
+        const releaseTitle = (data.name && String(data.name).trim()) ? data.name.trim() : "Untitled release";
+        const tag = (data.tag_name && String(data.tag_name).trim()) ? data.tag_name.trim() : "unknown";
 
         title.textContent = REPO;
-        badge.innerHTML = `Latest release: <strong>${escapeHtml(tag)}</strong>`;
-        document.title = `${REPO} · ${tag}`;
+        badge.innerHTML = `
+          <span class="release-label">LATEST RELEASE</span>
+          <span class="release-name">${escapeHtml(releaseTitle)}</span>
+          <span class="release-tag">${escapeHtml(tag)}</span>
+        `;
+        document.title = `${REPO} · ${releaseTitle} · ${tag}`;
       } catch {
         title.textContent = REPO;
-        badge.innerHTML = `Latest release: <strong>unavailable</strong>`;
+        badge.innerHTML = `
+          <span class="release-label">LATEST RELEASE</span>
+          <span class="release-name">unavailable</span>
+        `;
         document.title = REPO;
       }
     }
