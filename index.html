@@ -167,6 +167,10 @@
       return params.get("file") || DEFAULT_FILE;
     }
 
+    function getCurrentHash() {
+      return window.location.hash || "";
+    }
+
     function pathDir(path) {
       const idx = path.lastIndexOf("/");
       return idx >= 0 ? path.slice(0, idx + 1) : "";
@@ -193,6 +197,10 @@
       return normalizePath(baseDir + relativeHref);
     }
 
+    function isMarkdownPath(path) {
+      return /\.md$|\.markdown$|\.mdown$/i.test(path || "");
+    }
+
     function toSiteRoute(filePath, hash = "") {
       const url = new URL(window.location.href);
       if (filePath && filePath !== DEFAULT_FILE) {
@@ -202,6 +210,10 @@
       }
       url.hash = hash || "";
       return url.pathname + url.search + url.hash;
+    }
+
+    function escapeAttr(value) {
+      return String(value ?? "").replaceAll('"', "&quot;");
     }
 
     function rewriteHref(href, baseFile) {
@@ -223,11 +235,13 @@
           const [pathPart, hashPart] = rest.split("#");
           const [cleanPath, queryPart] = pathPart.split("?");
 
-          const route = cleanPath.endsWith(".md")
-            ? toSiteRoute(cleanPath, hashPart ? "#" + hashPart : "")
-            : cleanPath;
+          if (isMarkdownPath(cleanPath)) {
+            const route = toSiteRoute(cleanPath, hashPart ? "#" + hashPart : "");
+            return queryPart ? route + "?" + queryPart : route;
+          }
 
-          return queryPart ? route + "?" + queryPart : route;
+          const directPath = cleanPath + (queryPart ? "?" + queryPart : "") + (hashPart ? "#" + hashPart : "");
+          return directPath;
         }
       }
 
@@ -245,15 +259,15 @@
 
       const resolved = resolveRelativePath(baseFile, cleanHrefPath || "");
 
-      if (resolved.endsWith(".md")) {
+      if (!resolved) return trimmed;
+
+      if (isMarkdownPath(resolved)) {
         const route = toSiteRoute(resolved, hrefHash ? "#" + hrefHash : "");
         return queryPart ? route + "?" + queryPart : route;
       }
 
-      if (!cleanHrefPath) return trimmed;
-
-      const route = toSiteRoute(resolved, hrefHash ? "#" + hrefHash : "");
-      return queryPart ? route + "?" + queryPart : route;
+      const direct = resolved + (queryPart ? "?" + queryPart : "") + (hrefHash ? "#" + hrefHash : "");
+      return direct;
     }
 
     async function loadMarkdown(file) {
@@ -265,17 +279,47 @@
     function renderMarkdown(md, baseFile) {
       const renderer = new marked.Renderer();
 
-      renderer.link = function(href, title, text) {
+      renderer.link = function (...args) {
+        let href, title, text;
+
+        if (args.length === 1 && args[0] && typeof args[0] === "object") {
+          const token = args[0];
+          href = token.href;
+          title = token.title;
+          text = token.text ?? "";
+        } else {
+          [href, title, text] = args;
+        }
+
         const safeHref = rewriteHref(href, baseFile);
-        const safeTitle = title ? ` title="${String(title).replaceAll('"', "&quot;")}"` : "";
-        return `<a href="${safeHref}"${safeTitle}>${text}</a>`;
+        const safeTitle =
+          title != null && String(title).trim() !== ""
+            ? ` title="${escapeAttr(title)}"`
+            : "";
+
+        return `<a href="${escapeAttr(safeHref)}"${safeTitle}>${text}</a>`;
       };
 
-      renderer.image = function(href, title, text) {
+      renderer.image = function (...args) {
+        let href, title, text;
+
+        if (args.length === 1 && args[0] && typeof args[0] === "object") {
+          const token = args[0];
+          href = token.href;
+          title = token.title;
+          text = token.text ?? "";
+        } else {
+          [href, title, text] = args;
+        }
+
         const safeHref = rewriteHref(href, baseFile);
-        const safeTitle = title ? ` title="${String(title).replaceAll('"', "&quot;")}"` : "";
-        const safeAlt = text ? ` alt="${String(text).replaceAll('"', "&quot;")}"` : ' alt=""';
-        return `<img src="${safeHref}"${safeAlt}${safeTitle}>`;
+        const safeTitle =
+          title != null && String(title).trim() !== ""
+            ? ` title="${escapeAttr(title)}"`
+            : "";
+        const safeAlt = ` alt="${escapeAttr(text || "")}"`;
+
+        return `<img src="${escapeAttr(safeHref)}"${safeAlt}${safeTitle}>`;
       };
 
       marked.setOptions({
@@ -286,6 +330,15 @@
 
       const html = marked.parse(md);
       return DOMPurify.sanitize(html);
+    }
+
+    function scrollToHash(hash) {
+      if (!hash || hash === "#") return;
+      const id = decodeURIComponent(hash.slice(1));
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ block: "start" });
+      }
     }
 
     async function loadLatestRelease() {
@@ -313,17 +366,58 @@
 
     async function loadPage() {
       const file = getCurrentFile();
+      const hash = getCurrentHash();
+
       try {
         const md = await loadMarkdown(file);
         document.getElementById("content").innerHTML = renderMarkdown(md, file);
+        document.getElementById("pageTitle").textContent = file;
         document.title = `${REPO} · ${file}`;
+
+        requestAnimationFrame(() => scrollToHash(hash));
       } catch (err) {
         document.getElementById("content").innerHTML =
           `<pre>Failed to load page: ${String(err.message || err)}</pre>`;
+        document.getElementById("pageTitle").textContent = "Error";
       }
     }
 
+    function navigateTo(url) {
+      history.pushState({}, "", url);
+      loadPage();
+    }
+
+    document.getElementById("content").addEventListener("click", (e) => {
+      const a = e.target.closest("a[href]");
+      if (!a) return;
+
+      if (
+        e.defaultPrevented ||
+        e.button !== 0 ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey ||
+        a.target === "_blank" ||
+        a.hasAttribute("download")
+      ) {
+        return;
+      }
+
+      const href = a.getAttribute("href") || "";
+      const url = new URL(href, window.location.href);
+
+      const sameOrigin = url.origin === window.location.origin;
+      const appRoute = sameOrigin && url.pathname === window.location.pathname && url.searchParams.has("file");
+
+      if (appRoute) {
+        e.preventDefault();
+        navigateTo(url.pathname + url.search + url.hash);
+      }
+    });
+
     window.addEventListener("popstate", loadPage);
+    window.addEventListener("hashchange", () => scrollToHash(window.location.hash));
 
     Promise.all([loadLatestRelease(), loadPage()]);
   </script>
