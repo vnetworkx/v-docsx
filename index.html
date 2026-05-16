@@ -7,16 +7,16 @@
 
   <title>Docs</title>
   <meta id="metaDescription" name="description" content="Documentation site." />
- <meta
-  id="metaRobots"
-  name="robots"
-  content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
-/>
   <meta
-  id="metaGooglebot"
-  name="googlebot"
-  content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
-/>
+    id="metaRobots"
+    name="robots"
+    content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+  />
+  <meta
+    id="metaGooglebot"
+    name="googlebot"
+    content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+  />
 
   <meta id="ogTitle" property="og:title" content="Docs" />
   <meta id="ogDescription" property="og:description" content="Documentation site." />
@@ -227,8 +227,11 @@
     const REPO = "docs";
     const DEFAULT_FILE = "README.md";
 
-    let currentReleaseTitle = "";
-    let currentReleaseTag = "";
+    const SITE_NAME = "vNetworkx";
+    const SITE_LABEL = "Documentation";
+
+    let currentReleaseTitle = SITE_NAME;
+    let currentReleaseTag = SITE_LABEL;
     let currentPageTitle = "";
     let currentDescription = "";
 
@@ -462,7 +465,7 @@
 
       const releaseLabel = currentReleaseTitle && currentReleaseTag
         ? `${currentReleaseTitle} ${currentReleaseTag}`
-        : currentReleaseTitle || currentReleaseTag || REPO;
+        : currentReleaseTitle || currentReleaseTag || `${SITE_NAME} ${SITE_LABEL}`;
 
       const pageTitle = currentPageTitle || DEFAULT_FILE;
       const fullTitle = `${pageTitle} · ${releaseLabel}`;
@@ -516,14 +519,27 @@
           headers: { "Accept": "application/vnd.github+json" }
         });
 
-        if (!res.ok) throw new Error(`Release fetch failed: ${res.status}`);
-        const data = await res.json();
+        if (res.status === 404) {
+          currentReleaseTitle = SITE_NAME;
+          currentReleaseTag = SITE_LABEL;
+          updateSeo();
+          return;
+        }
 
-        currentReleaseTitle = (data.name && String(data.name).trim()) ? data.name.trim() : "Untitled release";
-        currentReleaseTag = (data.tag_name && String(data.tag_name).trim()) ? data.tag_name.trim() : "unknown";
-      } catch {
-        currentReleaseTitle = "Release unavailable";
-        currentReleaseTag = "";
+        if (!res.ok) throw new Error(`Release fetch failed: ${res.status}`);
+
+        const data = await res.json();
+        currentReleaseTitle = (data.name && String(data.name).trim()) ? data.name.trim() : SITE_NAME;
+        currentReleaseTag = (data.tag_name && String(data.tag_name).trim()) ? data.tag_name.trim() : SITE_LABEL;
+
+        if (!currentReleaseTitle && !currentReleaseTag) {
+          currentReleaseTitle = SITE_NAME;
+          currentReleaseTag = SITE_LABEL;
+        }
+      } catch (err) {
+        console.error("Latest release load failed:", err);
+        currentReleaseTitle = SITE_NAME;
+        currentReleaseTag = SITE_LABEL;
       }
 
       updateSeo();
