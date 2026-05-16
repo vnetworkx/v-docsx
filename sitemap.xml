@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://vnetworkx.github.io/docs/</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=README.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=SECURITY.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=experiments.py</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=MANIFEST.json</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/overview/QUICK_START.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/overview/CONCEPT_MAP.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/overview/STATUS.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/overview/LINKS.md</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/core/SPEC.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/core/FORMALISM.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/core/STATE_MODEL.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/core/CANONICAL_STATE_MODEL.md</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/language/VECTOR_LANGUAGE_SPEC.md</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/sdk/SDK_SPEC.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/sdk/SDK_FUNCTION_CONTRACTS.md</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/operations/OPERATIONS.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/operations/OPERATIONS_FINITE_TRANSITIONS.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/operations/ERRORS.md</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/reference/EXAMPLES.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/reference/GLOSSARY.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/reference/RECORDS.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/reference/VISUALIZATION_FRAMEWORK.md</loc>
+  </url>
+
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/governance/GOVERNANCE.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/governance/CERTIFICATION.md</loc>
+  </url>
+  <url>
+    <loc>https://vnetworkx.github.io/docs/?file=docs/governance/AUTHRATIO.md</loc>
+  </url>
+</urlset>
