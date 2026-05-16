@@ -1,265 +1,247 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#0b1020" id="themeColorMeta" />
-  <title>README Home</title>
-  <meta name="description" content="README.md rendered as a beautiful home page." />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f6f8fa" id="themeColorMeta" />
+  <title>Documentation</title>
+  <meta name="description" content="A mature GitHub-style markdown reader for README.md with versioning from GitHub tags." />
   <style>
     :root {
-      --bg: #0b1020;
-      --bg2: #111a34;
-      --card: rgba(255, 255, 255, 0.06);
-      --card-strong: rgba(255, 255, 255, 0.10);
-      --text: #e9ecff;
-      --muted: #a8b1d4;
-      --accent: #7c5cff;
-      --accent-2: #00d4ff;
-      --border: rgba(255, 255, 255, 0.12);
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-      --code-bg: #0f1730;
-      --code-border: rgba(124, 92, 255, 0.32);
-      --link: #9ab6ff;
-      --success: #2ee59d;
-      --danger: #ff7b7b;
-      --focus: 0 0 0 3px rgba(124, 92, 255, 0.30);
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --surface-muted: #f6f8fa;
+      --text: #1f2328;
+      --muted: #57606a;
+      --border: #d0d7de;
+      --border-soft: #d8dee4;
+      --link: #0969da;
+      --link-hover: #0550ae;
+      --code-bg: #f6f8fa;
+      --code-border: #d0d7de;
+      --quote: #656d76;
+      --accent: #0969da;
+      --shadow: 0 1px 2px rgba(27, 31, 36, 0.04);
+      --max-width: 980px;
     }
 
-    html[data-theme="light"] {
-      --bg: #f5f7fb;
-      --bg2: #eaf0ff;
-      --card: rgba(255, 255, 255, 0.75);
-      --card-strong: rgba(255, 255, 255, 0.92);
-      --text: #10142a;
-      --muted: #5a647f;
-      --accent: #5b4dff;
-      --accent-2: #00a8cc;
-      --border: rgba(16, 20, 42, 0.10);
-      --shadow: 0 20px 60px rgba(40, 52, 105, 0.12);
-      --code-bg: #f4f7ff;
-      --code-border: rgba(91, 77, 255, 0.18);
-      --link: #355cff;
-      --success: #148f62;
-      --danger: #c22f2f;
-      --focus: 0 0 0 3px rgba(91, 77, 255, 0.18);
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --surface-muted: #0d1117;
+        --text: #c9d1d9;
+        --muted: #8b949e;
+        --border: #30363d;
+        --border-soft: #30363d;
+        --link: #58a6ff;
+        --link-hover: #79c0ff;
+        --code-bg: #161b22;
+        --code-border: #30363d;
+        --quote: #8b949e;
+        --accent: #58a6ff;
+        --shadow: 0 1px 2px rgba(1, 4, 9, 0.35);
+      }
     }
 
     * { box-sizing: border-box; }
+
     html {
       scroll-behavior: smooth;
-      color-scheme: dark light;
+      color-scheme: light dark;
     }
-    html[data-theme="light"] { color-scheme: light; }
-    html[data-theme="dark"] { color-scheme: dark; }
 
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(124, 92, 255, 0.24), transparent 55%),
-        radial-gradient(900px 500px at 90% 20%, rgba(0, 212, 255, 0.16), transparent 55%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
       min-height: 100vh;
-      line-height: 1.65;
-      transition: background 220ms ease, color 220ms ease;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.5;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
 
-    a { color: var(--link); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    a:focus-visible, button:focus-visible {
-      outline: none;
-      box-shadow: var(--focus);
+    a {
+      color: var(--link);
+      text-decoration: none;
     }
 
-    .progress {
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: 3px;
-      z-index: 50;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      transform-origin: left center;
-      transform: scaleX(0);
+    a:hover {
+      color: var(--link-hover);
+      text-decoration: underline;
     }
 
-    .shell {
-      width: min(1400px, calc(100% - 32px));
-      margin: 18px auto 32px;
-      display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
-    .panel {
-      background: var(--card);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    .sidebar {
+    .topbar {
       position: sticky;
-      top: 18px;
-      padding: 18px;
-      overflow: hidden;
+      top: 0;
+      z-index: 30;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .topbar-inner {
+      max-width: calc(var(--max-width) + 280px);
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
     }
 
     .brand {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
     }
 
-    .logo {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 10px 30px rgba(124, 92, 255, 0.35);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      user-select: none;
+    .brand strong {
+      font-size: 0.96rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
 
-    .brand h1 {
-      font-size: 1.02rem;
-      margin: 0;
-      line-height: 1.15;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
+    .brand span {
+      font-size: 0.82rem;
       color: var(--muted);
-      font-size: 0.88rem;
     }
 
-    .controls {
+    .meta-badges {
       display: flex;
-      gap: 10px;
-      margin: 16px 0 18px;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    .btn {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: var(--card-strong);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
       color: var(--text);
-      border-radius: 14px;
-      padding: 10px 12px;
-      font: inherit;
-      cursor: pointer;
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      font-size: 0.84rem;
+      white-space: nowrap;
     }
-    .btn:hover { transform: translateY(-1px); border-color: rgba(124, 92, 255, 0.45); }
 
-    .toc-title {
-      margin: 12px 0 10px;
+    .shell {
+      max-width: calc(var(--max-width) + 280px);
+      margin: 0 auto;
+      padding: 24px 20px 56px;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 72px;
+      align-self: start;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 12px;
       font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
       color: var(--muted);
     }
 
     #toc {
       display: grid;
       gap: 6px;
-      max-height: calc(100vh - 250px);
+      max-height: calc(100vh - 120px);
       overflow: auto;
-      padding-right: 4px;
+      padding-right: 2px;
     }
 
     #toc a {
       display: block;
-      padding: 8px 10px;
-      border-radius: 12px;
+      padding: 6px 8px;
+      border-radius: 8px;
       color: var(--text);
+      line-height: 1.35;
+      font-size: 0.95rem;
       border: 1px solid transparent;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     #toc a:hover {
-      background: var(--card-strong);
+      background: var(--surface-muted);
+      border-color: var(--border-soft);
       text-decoration: none;
-      border-color: var(--border);
     }
 
-    .status {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(46, 229, 157, 0.08);
-      border: 1px solid rgba(46, 229, 157, 0.25);
-      color: var(--text);
-      font-size: 0.92rem;
-    }
-    .status.error {
-      background: rgba(255, 123, 123, 0.08);
-      border-color: rgba(255, 123, 123, 0.25);
+    .content {
+      min-width: 0;
     }
 
-    .content-wrap {
-      padding: 0;
+    .paper {
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .hero {
-      padding: 28px 28px 22px;
-      border-bottom: 1px solid var(--border);
-      background:
-        radial-gradient(800px 280px at 20% 0%, rgba(124, 92, 255, 0.18), transparent 58%),
-        radial-gradient(800px 260px at 80% 0%, rgba(0, 212, 255, 0.12), transparent 50%);
+    .doc-head {
+      padding: 24px 28px 0;
+      border-bottom: 1px solid var(--border-soft);
     }
 
-    .hero h2 {
-      margin: 0 0 8px;
-      font-size: clamp(1.8rem, 3vw, 3.2rem);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-    }
-
-    .hero p {
+    .doc-head h1 {
       margin: 0;
+      font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    .doc-head p {
+      margin: 10px 0 22px;
       color: var(--muted);
-      max-width: 72ch;
+      max-width: 75ch;
     }
 
-    .meta-row {
-      margin-top: 14px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.88rem;
-    }
-
-    .doc {
-      padding: 26px 28px 38px;
-      background: var(--card-strong);
+    .doc-head .version {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 8px;
     }
 
     .markdown {
-      max-width: 920px;
-      margin: 0 auto;
+      padding: 24px 28px 32px;
+      overflow-wrap: anywhere;
+    }
+
+    .markdown > :first-child {
+      margin-top: 0 !important;
+    }
+
+    .markdown > :last-child {
+      margin-bottom: 0 !important;
     }
 
     .markdown h1,
@@ -268,196 +250,247 @@
     .markdown h4,
     .markdown h5,
     .markdown h6 {
-      scroll-margin-top: 100px;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
+      margin: 1.6em 0 0.75em;
+      line-height: 1.25;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      scroll-margin-top: 92px;
     }
 
-    .markdown h1 { font-size: clamp(2rem, 4vw, 3rem); margin-top: 1.2em; }
-    .markdown h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-top: 1.4em; }
-    .markdown h3 { font-size: 1.28rem; margin-top: 1.25em; }
+    .markdown h1 {
+      font-size: 2em;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 0.3em;
+    }
+
+    .markdown h2 {
+      font-size: 1.5em;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 0.3em;
+    }
+
+    .markdown h3 { font-size: 1.25em; }
+    .markdown h4 { font-size: 1em; }
+    .markdown h5 { font-size: 0.875em; }
+    .markdown h6 { font-size: 0.85em; color: var(--muted); }
 
     .markdown p,
+    .markdown blockquote,
     .markdown ul,
     .markdown ol,
-    .markdown blockquote,
+    .markdown dl,
     .markdown table,
-    .markdown pre {
-      margin-top: 1rem;
+    .markdown pre,
+    .markdown details {
+      margin-top: 0;
       margin-bottom: 1rem;
+    }
+
+    .markdown p { word-break: break-word; }
+    .markdown ul,
+    .markdown ol { padding-left: 2em; }
+    .markdown li + li { margin-top: 0.25em; }
+
+    .markdown blockquote {
+      margin-left: 0;
+      padding: 0 1em;
+      color: var(--quote);
+      border-left: 0.25em solid var(--border);
+    }
+
+    .markdown hr {
+      height: 0.25rem;
+      padding: 0;
+      margin: 1.5rem 0;
+      background-color: var(--border-soft);
+      border: 0;
     }
 
     .markdown img {
       max-width: 100%;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-
-    .markdown blockquote {
-      border-left: 4px solid var(--accent);
-      margin-left: 0;
-      padding: 0.25rem 1rem;
-      color: var(--muted);
-      background: rgba(124, 92, 255, 0.08);
-      border-radius: 0 16px 16px 0;
+      height: auto;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
     }
 
     .markdown table {
+      display: block;
       width: 100%;
+      overflow: auto;
       border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 18px;
-      border: 1px solid var(--border);
+      border-spacing: 0;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
     }
 
-    .markdown th,
-    .markdown td {
-      padding: 0.8rem 0.9rem;
-      border-bottom: 1px solid var(--border);
+    .markdown table th,
+    .markdown table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-soft);
+      border-right: 1px solid var(--border-soft);
       text-align: left;
       vertical-align: top;
     }
 
-    .markdown th {
-      background: rgba(124, 92, 255, 0.10);
+    .markdown table th {
+      font-weight: 600;
+      background: var(--surface-muted);
+    }
+
+    .markdown table tr:nth-child(2n) td {
+      background: color-mix(in srgb, var(--surface-muted) 55%, transparent);
+    }
+
+    .markdown code {
+      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    .markdown :not(pre) > code {
+      padding: 0.15em 0.35em;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 6px;
     }
 
     .markdown pre {
       position: relative;
       overflow: auto;
-      padding: 1rem;
-      border-radius: 18px;
+      padding: 16px;
       background: var(--code-bg);
       border: 1px solid var(--code-border);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
     }
 
     .markdown pre code {
       display: block;
-      font-size: 0.92rem;
-      line-height: 1.6;
+      line-height: 1.45;
+      white-space: pre;
     }
 
     .copy-btn {
       position: absolute;
       top: 10px;
       right: 10px;
-      z-index: 2;
-      border: 1px solid var(--border);
-      background: var(--card);
+      appearance: none;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
       color: var(--text);
-      padding: 7px 10px;
-      border-radius: 999px;
+      font: inherit;
       font-size: 0.8rem;
+      border-radius: 6px;
+      padding: 6px 10px;
       cursor: pointer;
     }
 
-    .copy-btn:hover { border-color: rgba(124, 92, 255, 0.45); }
+    .copy-btn:hover { background: var(--surface-muted); }
+    .markdown a { word-break: break-word; }
 
-    .markdown code:not(pre code) {
-      background: rgba(124, 92, 255, 0.12);
-      border: 1px solid rgba(124, 92, 255, 0.18);
-      padding: 0.12rem 0.38rem;
+    .markdown details {
+      border: 1px solid var(--border-soft);
       border-radius: 8px;
-      font-size: 0.92em;
+      padding: 12px 14px;
+      background: var(--surface-muted);
     }
 
-    .markdown hr {
-      border: 0;
-      height: 1px;
-      background: var(--border);
-      margin: 2rem 0;
+    .markdown summary {
+      cursor: pointer;
+      font-weight: 600;
     }
 
-    .footer {
-      max-width: 920px;
-      margin: 0 auto;
-      padding-top: 8px;
+    .status {
+      margin: 0 28px 24px;
+      padding: 12px 14px;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      background: var(--surface-muted);
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
+    }
+
+    .status.error {
+      color: #cf222e;
+      border-color: #ffd7d5;
+      background: #fff8f8;
     }
 
     .loading {
       padding: 18px;
-      border: 1px dashed var(--border);
-      border-radius: 18px;
+      border: 1px dashed var(--border-soft);
+      border-radius: 8px;
       color: var(--muted);
-      text-align: center;
+      background: var(--surface-muted);
     }
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+    .footer {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
     @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: relative; top: 0; }
+      #toc { max-height: none; }
+      .topbar-inner,
       .shell {
-        grid-template-columns: 1fr;
+        padding-left: 14px;
+        padding-right: 14px;
       }
-      .sidebar {
-        position: relative;
-        top: 0;
+      .doc-head,
+      .markdown,
+      .status {
+        padding-left: 18px;
+        padding-right: 18px;
       }
-      #toc {
-        max-height: none;
+      .status {
+        margin-left: 18px;
+        margin-right: 18px;
       }
+      .meta-badges { justify-content: flex-start; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      * { transition: none !important; }
+      * { transition: none !important; animation: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="progress" id="progress"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <strong id="brandTitle">Documentation</strong>
+        <span id="brandSubtitle">GitHub-style markdown rendering</span>
+      </div>
+      <div class="meta-badges" aria-label="Repository metadata">
+        <span class="badge" id="versionBadge">Version: latest</span>
+        <span class="badge" id="repoBadge">GitHub tags</span>
+      </div>
+    </div>
+  </header>
 
   <main class="shell">
-    <aside class="panel sidebar">
-      <div class="brand">
-        <div class="logo">MD</div>
-        <div>
-          <h1>README Home</h1>
-          <p>Dynamic markdown landing page</p>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">Theme</button>
-        <button class="btn" id="reloadBtn" type="button">Reload README</button>
-      </div>
-
-      <div class="toc-title">On this page</div>
-      <nav id="toc" aria-label="Table of contents"></nav>
-
-      <div class="status" id="status">Loading README.md…</div>
+    <aside class="sidebar" aria-label="Table of contents">
+      <h2>Contents</h2>
+      <nav id="toc"></nav>
     </aside>
 
-    <section class="panel content-wrap">
-      <header class="hero">
-        <h2 id="pageTitle">README.md</h2>
-        <p id="pageSubtitle">This homepage is generated directly from your repository’s markdown file.</p>
-        <div class="meta-row">
-          <span class="pill">Fast client-side render</span>
-          <span class="pill">Auto-generated navigation</span>
-          <span class="pill">Real dark mode</span>
+    <section class="content">
+      <article class="paper">
+        <div class="doc-head">
+          <h1 id="pageTitle">Documentation</h1>
+          <p id="pageSubtitle">Rendered directly from your markdown file with a minimal, mature layout.</p>
+          <div class="version" id="docVersion">Loading version from GitHub tags…</div>
         </div>
-      </header>
 
-      <article class="doc">
+        <div class="status" id="status">Loading README.md…</div>
         <div class="markdown" id="content">
           <div class="loading">Fetching <code>README.md</code>…</div>
         </div>
-        <div class="footer">Place this <code>index.html</code> beside <code>README.md</code> and open it from a web server for best results.</div>
       </article>
+
+      <div class="footer">Open this page through a local server so the browser can load <code>README.md</code>.</div>
     </section>
   </main>
 
@@ -465,24 +498,30 @@
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/lib/common.min.js"></script>
   <script>
+    // Set this to your GitHub repository, e.g. "octocat/Hello-World".
+    const GITHUB_REPO = "";
+    const README_FILE = "README.md";
+
     const contentEl = document.getElementById('content');
     const tocEl = document.getElementById('toc');
     const statusEl = document.getElementById('status');
-    const progressEl = document.getElementById('progress');
-    const themeBtn = document.getElementById('themeBtn');
-    const reloadBtn = document.getElementById('reloadBtn');
     const pageTitle = document.getElementById('pageTitle');
     const pageSubtitle = document.getElementById('pageSubtitle');
+    const docVersion = document.getElementById('docVersion');
+    const brandTitle = document.getElementById('brandTitle');
+    const brandSubtitle = document.getElementById('brandSubtitle');
+    const versionBadge = document.getElementById('versionBadge');
+    const repoBadge = document.getElementById('repoBadge');
     const themeColorMeta = document.getElementById('themeColorMeta');
 
-    const STORAGE_KEY = 'readme-home-theme'; // 'dark' | 'light' | system default if missing
-    const mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    let currentTag = null;
+    let currentDocTitle = 'Documentation';
 
     marked.setOptions({
       gfm: true,
-      breaks: true,
-      headerIds: false,
+      breaks: false,
       mangle: false,
+      headerIds: false,
       highlight(code, lang) {
         try {
           if (lang && window.hljs && hljs.getLanguage(lang)) {
@@ -499,101 +538,109 @@
     function slugify(text) {
       return String(text)
         .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
         .trim()
+        .replace(/[^\w\s-]/g, '')
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-');
     }
 
-    function systemTheme() {
-      return mql && mql.matches ? 'dark' : 'light';
+    function versionText() {
+      return currentTag ? currentTag.replace(/^v/i, '') : 'latest';
     }
 
-    function updateThemeMeta(theme) {
-      themeColorMeta.setAttribute('content', theme === 'dark' ? '#0b1020' : '#f5f7fb');
+    function syncTitle() {
+      document.title = `${currentDocTitle} · v${versionText()}`;
+      brandTitle.textContent = currentDocTitle;
+      versionBadge.textContent = `Version: ${versionText()}`;
     }
 
-    function setTheme(theme, persist = true) {
-      document.documentElement.setAttribute('data-theme', theme);
-      updateThemeMeta(theme);
-      themeBtn.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-      themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-      if (persist) localStorage.setItem(STORAGE_KEY, theme);
+    function updateRepoMeta() {
+      repoBadge.textContent = GITHUB_REPO || 'GitHub tags';
+      brandSubtitle.textContent = GITHUB_REPO
+        ? `Documentation version ${versionText()}`
+        : 'Documentation version from GitHub tags';
     }
 
-    function applyTheme() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved === 'dark' || saved === 'light') {
-        setTheme(saved, false);
-        return;
+    async function fetchLatestTag(repo) {
+      const response = await fetch(`https://api.github.com/repos/${repo}/tags?per_page=1`, {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (!response.ok) throw new Error(`GitHub tags HTTP ${response.status}`);
+      const tags = await response.json();
+      return Array.isArray(tags) && tags.length > 0 ? (tags[0]?.name || null) : null;
+    }
+
+    function buildToc() {
+      tocEl.innerHTML = '';
+      const headings = contentEl.querySelectorAll('h1, h2, h3, h4');
+      headings.forEach((heading) => {
+        if (!heading.id) heading.id = slugify(heading.textContent || 'section');
+        const link = document.createElement('a');
+        link.href = `#${heading.id}`;
+        link.textContent = heading.textContent || heading.id;
+        link.style.paddingLeft =
+          heading.tagName === 'H4' ? '24px' :
+          heading.tagName === 'H3' ? '16px' :
+          heading.tagName === 'H2' ? '8px' : '0';
+        tocEl.appendChild(link);
+      });
+
+      if (!headings.length) {
+        const empty = document.createElement('div');
+        empty.className = 'loading';
+        empty.textContent = 'No headings found.';
+        tocEl.appendChild(empty);
       }
-      setTheme(systemTheme(), false);
-    }
-
-    function updateProgress() {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
-      progressEl.style.transform = `scaleX(${pct})`;
     }
 
     function addCopyButtons() {
       contentEl.querySelectorAll('pre').forEach((pre) => {
         if (pre.querySelector('.copy-btn')) return;
-        const btn = document.createElement('button');
-        btn.className = 'copy-btn';
-        btn.type = 'button';
-        btn.textContent = 'Copy';
-        btn.addEventListener('click', async () => {
+        const button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.type = 'button';
+        button.textContent = 'Copy';
+        button.addEventListener('click', async () => {
           const code = pre.querySelector('code')?.innerText ?? pre.innerText;
           try {
             await navigator.clipboard.writeText(code);
-            btn.textContent = 'Copied';
-            setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+            button.textContent = 'Copied';
+            setTimeout(() => button.textContent = 'Copy', 1200);
           } catch {
-            btn.textContent = 'Failed';
-            setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+            button.textContent = 'Failed';
+            setTimeout(() => button.textContent = 'Copy', 1200);
           }
         });
-        pre.appendChild(btn);
+        pre.appendChild(button);
       });
     }
 
-    function buildToc() {
-      tocEl.innerHTML = '';
-      const headings = contentEl.querySelectorAll('h1, h2, h3');
-      headings.forEach((heading) => {
-        if (!heading.id) heading.id = slugify(heading.textContent || 'section');
-        const a = document.createElement('a');
-        a.href = `#${heading.id}`;
-        a.textContent = heading.textContent || heading.id;
-        a.style.paddingLeft = heading.tagName === 'H3' ? '22px' : heading.tagName === 'H2' ? '14px' : '10px';
-        tocEl.appendChild(a);
-      });
-      if (!headings.length) {
-        const empty = document.createElement('div');
-        empty.className = 'loading';
-        empty.textContent = 'No headings found in README.md.';
-        tocEl.appendChild(empty);
-      }
-    }
-
-    function enhanceDocument() {
+    function enhance() {
       contentEl.querySelectorAll('a').forEach((a) => {
         const href = a.getAttribute('href') || '';
-        if (href.startsWith('http://') || href.startsWith('https://')) {
+        if (/^https?:\/\//i.test(href)) {
           a.target = '_blank';
           a.rel = 'noreferrer noopener';
         }
       });
 
       contentEl.querySelectorAll('img').forEach((img) => {
-        if (!img.loading) img.loading = 'lazy';
+        img.loading = 'lazy';
       });
 
       addCopyButtons();
       buildToc();
-      updateProgress();
+    }
+
+    function setVersion(tag) {
+      currentTag = tag;
+      updateRepoMeta();
+      syncTitle();
+      docVersion.textContent = tag
+        ? `Built from GitHub tag ${tag}`
+        : (GITHUB_REPO
+          ? 'No GitHub tag found. Showing the latest documentation title.'
+          : 'Set GITHUB_REPO in the script to show the documentation version from GitHub tags.');
     }
 
     async function loadReadme() {
@@ -602,30 +649,27 @@
       contentEl.innerHTML = '<div class="loading">Fetching <code>README.md</code>…</div>';
 
       try {
-        const bust = `?v=${Date.now()}`;
-        const response = await fetch('README.md' + bust, { cache: 'no-store' });
+        const response = await fetch(`${README_FILE}?v=${Date.now()}`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         const markdown = await response.text();
         const firstHeading = markdown.match(/^#\s+(.+)$/m);
-        const title = firstHeading ? firstHeading[1].trim() : 'README Home';
-        document.title = title;
-        pageTitle.textContent = firstHeading ? firstHeading[1].trim() : 'README.md';
-        pageSubtitle.textContent = firstHeading ? 'Rendered from your README.md' : 'Rendered from your README.md';
+        currentDocTitle = firstHeading ? firstHeading[1].trim() : 'Documentation';
+        pageTitle.textContent = currentDocTitle;
+        pageSubtitle.textContent = 'Rendered directly from your markdown file with a minimal, mature layout.';
+        syncTitle();
 
-        const rawHtml = marked.parse(markdown);
-        const safeHtml = DOMPurify.sanitize(rawHtml, {
+        const html = marked.parse(markdown);
+        contentEl.innerHTML = DOMPurify.sanitize(html, {
           USE_PROFILES: { html: true }
         });
-        contentEl.innerHTML = safeHtml;
-        enhanceDocument();
 
-        statusEl.textContent = 'README.md loaded successfully.';
-      } catch (err) {
+        enhance();
+        statusEl.textContent = 'README.md loaded.';
+      } catch (error) {
         contentEl.innerHTML = `
           <div class="loading">
-            <strong>Could not load README.md.</strong><br>
-            Make sure <code>README.md</code> is in the same folder and open this page through a local web server.
+            Could not load <code>README.md</code>. Make sure it sits next to this file and that you are serving the folder through a local web server.
           </div>`;
         statusEl.classList.add('error');
         statusEl.textContent = 'README.md could not be loaded.';
@@ -633,27 +677,30 @@
       }
     }
 
-    themeBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || systemTheme();
-      setTheme(current === 'dark' ? 'light' : 'dark');
-    });
+    async function init() {
+      if (window.matchMedia) {
+        const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        themeColorMeta.setAttribute('content', darkMode ? '#0d1117' : '#f6f8fa');
+      }
 
-    reloadBtn.addEventListener('click', loadReadme);
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('resize', updateProgress);
+      updateRepoMeta();
 
-    if (mql) {
-      const syncTheme = () => {
-        if (localStorage.getItem(STORAGE_KEY) == null) {
-          setTheme(systemTheme(), false);
+      if (GITHUB_REPO) {
+        try {
+          const tag = await fetchLatestTag(GITHUB_REPO);
+          setVersion(tag);
+        } catch (error) {
+          setVersion(null);
+          docVersion.textContent = `GitHub tag lookup failed for ${GITHUB_REPO}. Showing the documentation without a version tag.`;
         }
-      };
-      if (mql.addEventListener) mql.addEventListener('change', syncTheme);
-      else if (mql.addListener) mql.addListener(syncTheme);
+      } else {
+        setVersion(null);
+      }
+
+      await loadReadme();
     }
 
-    applyTheme();
-    loadReadme();
+    init();
   </script>
 </body>
 </html>
