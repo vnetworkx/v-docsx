@@ -21,7 +21,6 @@
       --code-btn-bg: rgba(255,255,255,0.10);
       --code-btn-bg-hover: rgba(255,255,255,0.18);
       --code-btn-border: rgba(255,255,255,0.20);
-      --muted: rgba(255,255,255,0.72);
     }
 
     body {
@@ -46,59 +45,14 @@
       padding: 16px 24px;
     }
 
-    .title-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    h1 {
+    .header-title {
       margin: 0;
       font-size: 20px;
-      font-weight: 600;
+      font-weight: 700;
       line-height: 1.25;
       color: #ffffff;
-      flex: 1 1 320px;
-      min-width: 0;
       overflow-wrap: anywhere;
       word-break: break-word;
-    }
-
-    .release {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 13px;
-      color: #ffffff;
-      background: transparent;
-      white-space: normal;
-      max-width: 100%;
-      flex: 0 1 auto;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
-    .release-label {
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .release-name {
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .release-tag {
-      color: var(--muted);
-      font-weight: 600;
     }
 
     main {
@@ -220,19 +174,8 @@
         padding: 14px 16px;
       }
 
-      .title-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      h1 {
-        flex: 1 1 auto;
+      .header-title {
         font-size: 18px;
-      }
-
-      .release {
-        width: 100%;
-        justify-content: center;
       }
 
       main {
@@ -243,9 +186,8 @@
 </head>
 <body>
   <header>
-    <div class="wrap title-row">
-      <h1 id="pageTitle">Loading…</h1>
-      <div class="release" id="releaseBadge">LATEST RELEASE <strong>…</strong></div>
+    <div class="wrap">
+      <h1 id="releaseHeader" class="header-title">Loading…</h1>
     </div>
   </header>
 
@@ -473,8 +415,7 @@
     }
 
     async function loadLatestRelease() {
-      const badge = document.getElementById("releaseBadge");
-      const title = document.getElementById("pageTitle");
+      const header = document.getElementById("releaseHeader");
 
       try {
         const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/releases/latest`, {
@@ -487,19 +428,10 @@
         const releaseTitle = (data.name && String(data.name).trim()) ? data.name.trim() : "Untitled release";
         const tag = (data.tag_name && String(data.tag_name).trim()) ? data.tag_name.trim() : "unknown";
 
-        title.textContent = REPO;
-        badge.innerHTML = `
-          <span class="release-label">LATEST RELEASE</span>
-          <span class="release-name">${escapeHtml(releaseTitle)}</span>
-          <span class="release-tag">${escapeHtml(tag)}</span>
-        `;
-        document.title = `${REPO} · ${releaseTitle} · ${tag}`;
+        header.textContent = `${releaseTitle} ${tag}`;
+        document.title = `${releaseTitle} ${tag}`;
       } catch {
-        title.textContent = REPO;
-        badge.innerHTML = `
-          <span class="release-label">LATEST RELEASE</span>
-          <span class="release-name">unavailable</span>
-        `;
+        header.textContent = "Latest release unavailable";
         document.title = REPO;
       }
     }
@@ -511,14 +443,12 @@
       try {
         const md = await loadMarkdown(file);
         document.getElementById("content").innerHTML = renderMarkdown(md, file);
-        document.getElementById("pageTitle").textContent = file;
         document.title = `${REPO} · ${file}`;
 
         requestAnimationFrame(() => scrollToHash(hash));
       } catch (err) {
         document.getElementById("content").innerHTML =
           `<pre>Failed to load page: ${escapeHtml(String(err.message || err))}</pre>`;
-        document.getElementById("pageTitle").textContent = "Error";
       }
     }
 
