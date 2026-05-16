@@ -3,34 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
+  <meta name="color-scheme" content="dark" />
   <title>Docs</title>
 
-  <!-- GitHub-like markdown styling -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-light.min.css">
+  <!-- Use GitHub markdown styling, but we override it for dark text -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css">
 
   <style>
     :root {
       --page-width: 980px;
-      --border: #d0d7de;
-      --bg: #ffffff;
-      --text: #24292f;
-      --muted: #57606a;
-      --header-bg: #f6f8fa;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0d1117;
-        --text: #c9d1d9;
-        --muted: #8b949e;
-        --border: #30363d;
-        --header-bg: #161b22;
-      }
-
-      .markdown-body {
-        color-scheme: dark;
-      }
+      --border: rgba(255,255,255,0.18);
+      --bg: #0b0f14;
+      --text: #ffffff;
+      --muted: #f2f2f2;
+      --header-bg: #11161d;
+      --link: #8ab4ff;
     }
 
     body {
@@ -68,6 +55,7 @@
       font-size: 20px;
       font-weight: 600;
       line-height: 1.2;
+      color: #ffffff;
     }
 
     .release {
@@ -78,14 +66,14 @@
       border-radius: 999px;
       padding: 6px 10px;
       font-size: 14px;
-      color: var(--muted);
+      color: #ffffff;
       background: transparent;
       white-space: nowrap;
     }
 
     .release strong {
-      color: var(--text);
-      font-weight: 600;
+      color: #ffffff;
+      font-weight: 700;
     }
 
     main {
@@ -99,6 +87,48 @@
       box-sizing: border-box;
       min-width: 200px;
       margin: 0 auto;
+      color: #ffffff !important;
+    }
+
+    .markdown-body,
+    .markdown-body h1,
+    .markdown-body h2,
+    .markdown-body h3,
+    .markdown-body h4,
+    .markdown-body h5,
+    .markdown-body h6,
+    .markdown-body p,
+    .markdown-body li,
+    .markdown-body blockquote,
+    .markdown-body strong,
+    .markdown-body em,
+    .markdown-body td,
+    .markdown-body th,
+    .markdown-body code,
+    .markdown-body pre,
+    .markdown-body a {
+      color: #ffffff !important;
+    }
+
+    .markdown-body a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .markdown-body hr,
+    .markdown-body table,
+    .markdown-body td,
+    .markdown-body th,
+    .markdown-body blockquote,
+    .markdown-body pre,
+    .markdown-body code {
+      border-color: var(--border) !important;
+    }
+
+    .markdown-body pre,
+    .markdown-body code,
+    .markdown-body blockquote {
+      background: rgba(255,255,255,0.06) !important;
     }
   </style>
 </head>
@@ -118,10 +148,8 @@
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 
   <script>
-    // Set these to your repo
     const OWNER = "vnetworkx";
     const REPO  = "docs";
-
     const README_PATH = "./README.md";
 
     async function loadMarkdown() {
@@ -148,11 +176,9 @@
         const data = await res.json();
 
         const tag = data.tag_name || "unknown";
-        const name = data.name || tag;
 
         title.textContent = `${REPO}`;
         badge.innerHTML = `Latest release: <strong>${tag}</strong>`;
-
         document.title = `${REPO} · ${tag}`;
       } catch (e) {
         title.textContent = `${REPO}`;
